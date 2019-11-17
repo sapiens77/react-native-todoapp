@@ -5,6 +5,7 @@ const Input = ({inputValue, inputChange}) => {
   return (
     <View style={styles.inputContainer}>
       <TextInput
+        value={inputValue}
         style={styles.input}
         placeholder="What needs to be done?"
         placeholderTextColor="#CACACA"

@@ -4,6 +4,8 @@ import Heading from './Heading';
 import Input from './Input';
 import Button from './Button';
 import TodoList from './TodoList';
+import TodoButton from './TodoButton';
+import TabBar from './TabBar';
 
 let todoIndex = 0;
 
@@ -18,6 +20,11 @@ class App extends Component {
     this.submitTodo = this.submitTodo.bind(this);
     this.toggleComplete = this.toggleComplete.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
+    this.setType = this.setType.bind(this);
+  }
+
+  setType(type) {
+    this.setState({type});
   }
 
   inputChange(inputValue) {
@@ -42,14 +49,15 @@ class App extends Component {
 
     this.setState({todos, inputValue: ''}, () => {
       // todo의 state를 지정해 this.state.todos의 갱신된 배열과 일치하게 만들고, inputValue를 빈문자열로 재지정
-      console.log('State: ', this.state); // 상태가 설정되면 콜백함수를 전달하는 옵션이 있다. 여기서 setState의 콜백 함수는 상태가 로그아웃되어 모든것이 작동하는지 확인한다.
+      console.log('submit after State: ', this.state); // 상태가 설정되면 콜백함수를 전달하는 옵션이 있다. 여기서 setState의 콜백 함수는 상태가 로그아웃되어 모든것이 작동하는지 확인한다.
     });
   }
 
   deleteTodo(todoIndex) {
     let {todos} = this.state;
+    console.log(todoIndex);
     todos = todos.filter(todo => todo.todoIndex !== todoIndex);
-    this.setState(todos);
+    this.setState({todos}); // 위에서는 그냥 todos로 받고 여기서는 {todos}를 넘기는 이유???
   }
 
   toggleComplete(todoIndex) {
@@ -63,7 +71,7 @@ class App extends Component {
   }
 
   render() {
-    const {inputValue, todos} = this.state;
+    const {inputValue, todos, type} = this.state;
     return (
       <View style={styles.container}>
         <ScrollView keyboardShouldPersistTaps="always" style={styles.content}>
@@ -72,9 +80,14 @@ class App extends Component {
             inputValue={inputValue}
             inputChange={text => this.inputChange(text)}
           />
-          <TodoList todos={todos} />
+          <TodoList
+            todos={todos}
+            toggleComplete={this.toggleComplete}
+            deleteTodo={this.deleteTodo}
+          />
           <Button submitTodo={this.submitTodo} />
         </ScrollView>
+        <TabBar type={type} setType={this.setType} />
       </View>
     );
   }
